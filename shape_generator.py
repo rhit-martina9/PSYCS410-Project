@@ -47,7 +47,7 @@ def shoelace(pts):
     for i in range(len(pts)):
         left += pts[i][0] * pts[(i+1) % len(pts)][1]
         right += pts[i][1] * pts[(i+1) % len(pts)][0]
-    return abs(left-right)
+    return abs(left-right)/2
 
 # triangles
 for i in range(3):
@@ -71,5 +71,6 @@ for i in range(3):
         x3 = random.randint(0,size-1)
         y3 = random.randint(0,size-1)
         points.append((x3,y3))
+    print(shoelace(points))
     print(points)
     triangles.append(points)
