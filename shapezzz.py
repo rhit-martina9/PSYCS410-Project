@@ -21,13 +21,27 @@ class Shape(abc.ABC):
     def is_point_in_shape(self, point: Point) -> bool:
         pass
 
-    @abc.abstractmethod
     def is_point_on_shape_boundary(self, point: Point) -> bool:
-        pass
+        if not self.is_point_in_shape(point):
+            return False
+        dist = self.get_line_dists(point)
+        cornercount = 0
+        for dis in dist:
+            if dis < 1:
+                cornercount = cornercount + 1
+        if cornercount == 2:
+            return True
+        return False
 
-    @abc.abstractmethod
     def is_point_on_corner(self, point: Point) -> bool:
-        pass
+        if not self.is_point_in_shape(point):
+            return False
+        dists = self.get_line_dists(point)
+        indist = False
+        for dist in dists:
+            if dist < 1:
+                indist = True
+        return indist
 
     @abc.abstractmethod
     def generateShape(self):
@@ -90,26 +104,6 @@ class Rectangle(Shape):
             ly = True
         return lx and hx and ly and hy
 
-    def is_point_on_shape_boundary(self, point: Point) -> bool:
-        if not self.is_point_in_shape(point):
-            return False
-        d1, d2, d3, d4 = self.get_line_dists(point)
-        if d1 < 1 or d2 < 1 or d3 < 1 or d4 < 1:
-            return True
-        return False
-
-    def is_point_on_corner(self, point: Point) -> bool:
-        if not self.is_point_in_shape(point):
-            return False
-        dist = self.get_line_dists(point)
-        cornercount = 0
-        for dis in dist:
-            if dis < 1:
-                cornercount = cornercount + 1
-        if cornercount == 2:
-            return True
-        return False
-
     def generateShape(self):
         pass
 
@@ -127,12 +121,6 @@ class Triangle(Shape):
         haspos = (d1>0) or (d2>0) or (d3>0)
 
         return not (hasneg and haspos)
-
-    def is_point_on_shape_boundary(self, point: Point) -> bool:
-        pass
-
-    def is_point_on_corner(self, point: Point) -> bool:
-        pass
 
     def generateShape(self):
         pass
