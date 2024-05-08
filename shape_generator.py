@@ -41,7 +41,15 @@ for i in range(3):
 for circ in circles:
     print(circ[0])
 
-#triangles
+
+def shoelace(pts):
+    left, right = 0, 0
+    for i in range(len(pts)):
+        left += pts[i][0] * pts[(i+1) % len(pts)][1]
+        right += pts[i][1] * pts[(i+1) % len(pts)][0]
+    return abs(left-right)
+
+# triangles
 for i in range(3):
     points = []
     x1 = random.randint(0,size-1)
@@ -50,16 +58,18 @@ for i in range(3):
 
     x2 = random.randint(0,size-1)
     y2 = random.randint(0,size-1)
-    while x1 == x2 or y1 == y2 or abs(x1-x2)*abs(y1-y2) < size*2 or abs(x1-x2)*abs(y1-y2) > size*(size-1)*2:
+    while x1 == x2 or y1 == y2:
         x2 = random.randint(0,size-1)
         y2 = random.randint(0,size-1)
     points.append((x2,y2))
-
-    if random.random() > 0.5:
-        points.append((x1,y2))
-    else:
-        points.append((x2,y1))
+    
+    x3 = random.randint(0,size-1)
+    y3 = random.randint(0,size-1)
+    points.append((x3,y3))
+    while x3 in [x1, x2] or y3 in [y1, y2] or shoelace(points) < size or shoelace(points) > size*(size-1):
+        points.pop()
+        x3 = random.randint(0,size-1)
+        y3 = random.randint(0,size-1)
+        points.append((x3,y3))
+    print(points)
     triangles.append(points)
-
-for tri in triangles:
-    print(tri)
