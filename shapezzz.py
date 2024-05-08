@@ -13,10 +13,6 @@ class Point:
 class Shape(abc.ABC):
     points: list[Point]
 
-    def __init__(self):
-        self.points = []
-        self.generateShape()
-
     @abc.abstractmethod
     def is_point_in_shape(self, point: Point) -> bool:
         pass
