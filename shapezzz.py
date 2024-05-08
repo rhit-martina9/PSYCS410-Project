@@ -71,9 +71,19 @@ class Shape(abc.ABC):
         outdists.append(self.dist_line_to_point(prevpoint, self.points[0], point))
         return outdists
 
+    @staticmethod
+    def dist_point_point(p1: Point, p2: Point):
+        mul1 = (p2.x-p1.x)**2
+        mul2 = (p2.y-p2.y)**2
+        ret = math.sqrt(mul1+mul2)
+        return ret
+
 
 class Rectangle(Shape):
+    defpoints: tuple[Point, Point]
+
     def __init__(self, p1: Point, p2: Point):
+        self.defpoints = (p1, p2)
         p3 = Point(p1.x, p2.y)
         p4 = Point(p2.x, p1.y)
         if p1.y > p2.y:
@@ -109,16 +119,17 @@ class Rectangle(Shape):
 
 
 class Triangle(Shape):
-    def triangletest(self, p1: Point, p2: Point, p3: Point):
-        return (p1.x - p3.x)*(p2.y-p3.y)-(p2.x-p3.x)*(p1.y-p3.y)
+    @staticmethod
+    def triangletest(p1: Point, p2: Point, p3: Point):
+        return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y)
 
     def is_point_in_shape(self, point: Point) -> bool:
         d1 = self.triangletest(point, self.points[0], self.points[1])
         d2 = self.triangletest(point, self.points[1], self.points[2])
         d3 = self.triangletest(point, self.points[2], self.points[0])
 
-        hasneg = (d1<0) or (d2<0) or (d3<0)
-        haspos = (d1>0) or (d2>0) or (d3>0)
+        hasneg = (d1 < 0) or (d2 < 0) or (d3 < 0)
+        haspos = (d1 > 0) or (d2 > 0) or (d3 > 0)
 
         return not (hasneg and haspos)
 
@@ -127,3 +138,34 @@ class Triangle(Shape):
 
     def __init__(self, p1: Point, p2: Point, p3: Point):
         self.points = [p1, p2, p3]
+
+
+class Circles(Shape):
+    center: Point
+    defpoints: tuple[Point, Point]
+    radius: float
+
+    def is_point_in_shape(self, point: Point) -> bool:
+        pdist = self.dist_point_point(point, self.center)
+        if pdist <= self.radius:
+            return True
+        return False
+
+    def is_point_on_corner(self, point: Point) -> bool:
+        return False
+
+    def is_point_on_shape_boundary(self, point: Point) -> bool:
+        pdist = self.dist_point_point(point, self.center)
+        rdist = self.radius - pdist
+        if 0 <= rdist < 1:
+            return True
+        return False
+
+    def generateShape(self):
+        pass
+
+    def __init__(self, center: Point, outpoint: Point):
+        self.points = [center, outpoint]
+        self.center = center
+        self.defpoints = (center, outpoint)
+        self.radius = self.dist_point_point(outpoint, center)
