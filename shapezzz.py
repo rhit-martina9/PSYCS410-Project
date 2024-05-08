@@ -70,9 +70,37 @@ class Shape(abc.ABC):
     @staticmethod
     def dist_point_point(p1: Point, p2: Point):
         mul1 = (p2.x-p1.x)**2
-        mul2 = (p2.y-p2.y)**2
+        mul2 = (p2.y-p1.y)**2
         ret = math.sqrt(mul1+mul2)
         return ret
+
+    @staticmethod
+    def find_slope(point1: Point, point2: Point) -> float|None:
+        if point1.x - point2.x == 0:
+            return None
+        slope = (point1.y - point2.y) / (point1.x - point2.x)
+        return slope
+
+    @staticmethod
+    def test_colinear(p1: Point, p2: Point, p3: Point) -> bool:
+        if p1==p2 or p1==p3 or p2==p3:
+            return True
+        s1 = Shape.find_slope(p1, p2)
+        s2 = Shape.find_slope(p2, p3)
+        if s1 is None and s2 is None:
+            return True
+        elif s1 is None or s2 is None:
+            return False
+        elif abs(s1) == abs(s2):
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def find_midpoint(p1: Point, p2: Point) -> Point:
+        retx = (p1.x - p2.x)/2 + p2.x
+        rety = (p1.y - p2.y)/2 + p2.y
+        return Point(retx,rety)
 
 
 class Rectangle(Shape):
@@ -92,8 +120,14 @@ class Rectangle(Shape):
                 self.points = [p4, p2, p3, p1]
             elif p1.x > p2.x:
                 self.points = [p2, p4, p1, p3]
-        if self.points is None or len(self.points) == 0:
-            logging.warning("can't make rectangle!")
+
+
+    def __new__(cls, p1: Point, p2: Point):
+        if p1 == p2:
+            return None
+        self = object.__new__(cls)
+        return self
+
 
     def is_point_in_shape(self, point: Point) -> bool:
         lx = False
@@ -115,6 +149,7 @@ class Rectangle(Shape):
 
 
 class Triangle(Shape):
+
     @staticmethod
     def triangletest(p1: Point, p2: Point, p3: Point):
         return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y)
@@ -135,10 +170,15 @@ class Triangle(Shape):
     def __init__(self, p1: Point, p2: Point, p3: Point):
         self.points = [p1, p2, p3]
 
+    def __new__(cls, p1: Point, p2: Point, p3: Point):
+        if Triangle.test_colinear(p1, p2, p3):
+            return None
+        self = object.__new__(cls)
+        return self
 
-class Circles(Shape):
+
+class Circle(Shape):
     center: Point
-    defpoints: tuple[Point, Point]
     radius: float
 
     def is_point_in_shape(self, point: Point) -> bool:
@@ -164,4 +204,10 @@ class Circles(Shape):
         self.points = [center, outpoint]
         self.center = center
         self.defpoints = (center, outpoint)
-        self.radius = self.dist_point_point(outpoint, center)
+        self.radius = self.dist_point_point(center, outpoint)
+
+    def __new__(cls, center: Point, outpoint: Point):
+        if center == outpoint:
+            return None
+        self = object.__new__(cls)
+        return self
