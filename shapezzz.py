@@ -147,6 +147,9 @@ class Rectangle(Shape):
     def generateShape(self):
         pass
 
+    def area(self):
+        return abs(self.points[0].x - self.points[2].x)*abs(self.points[0].y - self.points[2].y)
+
 
 class Triangle(Shape):
 
@@ -169,6 +172,13 @@ class Triangle(Shape):
 
     def __init__(self, p1: Point, p2: Point, p3: Point):
         self.points = [p1, p2, p3]
+
+    def area(self):
+        left,right = 0,0
+        for i in range(3):
+            left += self.points[i].x * self.points[(i+1)%3].y
+            right += self.points[i].y * self.points[(i+1)%3].x
+        return abs(left - right) / 2
 
     def __new__(cls, p1: Point, p2: Point, p3: Point):
         if Triangle.test_colinear(p1, p2, p3):
@@ -199,6 +209,9 @@ class Circle(Shape):
 
     def generateShape(self):
         pass
+
+    def area(self):
+        return math.pi*self.radius**2
 
     def __init__(self, center: Point, outpoint: Point):
         self.points = [center, outpoint]

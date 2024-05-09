@@ -1,7 +1,7 @@
 import math
 import numpy as np
-GRID_WIDTH = 6
-GRID_HEIGHT = 6
+GRID_WIDTH = 10
+GRID_HEIGHT = 10
 
 
 from shapezzz import Point, Rectangle, Circle, Triangle
@@ -23,7 +23,10 @@ def generate_rectangles(maxgrid: Point) -> list[Rectangle]:
         p1 = gridlist[p1i]
         for p2i in range(p1i + 1, len(gridlist)):
             p2 = gridlist[p2i]
-            output.append(Rectangle(p1, p2))
+
+            new_rect = Rectangle(p1, p2)
+            if new_rect.area() >= maxgrid.x and new_rect.area() <= maxgrid.x*(maxgrid.x - 1):
+                output.append(new_rect)
 
     return output
 
@@ -40,7 +43,10 @@ def generate_circles(maxgrid: Point) -> list[Circle]:
                 continue
             if Circle.dist_point_point(p1, p2) > min(p1.x, p1.y, maxgrid.x-p1.x, maxgrid.y-p1.y):
                 continue
-            output.append(Circle(p1, p2))
+
+            new_circ = Circle(p1, p2)
+            if new_circ.area() >= maxgrid.x and new_circ.area() <= maxgrid.x*(maxgrid.x - 1):
+                output.append(new_circ)
     return output
 
 
@@ -52,7 +58,9 @@ def generate_triangles(maxgrid: Point) -> list[Triangle]:
         for p2i in range(p1i + 1, len(gridpoints)):
             for p3i in range(p2i + 1, len(gridpoints)):
                 if not Triangle.test_colinear(gridpoints[p1i], gridpoints[p2i], gridpoints[p3i]):
-                    output.append(Triangle(gridpoints[p1i], gridpoints[p2i], gridpoints[p3i]))
+                    new_tri = Triangle(gridpoints[p1i], gridpoints[p2i], gridpoints[p3i])
+                    if new_tri.area() >= maxgrid.x and new_tri.area() <= maxgrid.x*(maxgrid.x - 1):
+                        output.append(new_tri)
     return output
 
 
