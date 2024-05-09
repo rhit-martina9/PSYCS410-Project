@@ -138,9 +138,9 @@ class Rectangle(Shape):
             lx = True
         if self.points[0].y >= point.y:
             hy = True
-        if self.points[3].x >= point.x:
+        if self.points[2].x >= point.x:
             hx = True
-        if self.points[3].y <= point.y:
+        if self.points[2].y <= point.y:
             ly = True
         return lx and hx and ly and hy
 
