@@ -113,12 +113,12 @@ class Rectangle(Shape):
         if p1.y > p2.y:
             if p1.x < p2.x:
                 self.points = [p1, p4, p2, p3]
-            elif p1.x > p2.x:
+            else:
                 self.points = [p4, p1, p3, p2]
-        elif p1.y < p2.y:
+        else:
             if p1.x < p2.x:
                 self.points = [p4, p2, p3, p1]
-            elif p1.x > p2.x:
+            else:
                 self.points = [p2, p4, p1, p3]
 
 
@@ -136,11 +136,11 @@ class Rectangle(Shape):
         hy = False
         if self.points[0].x <= point.x:
             lx = True
-        if self.points[0].y <= point.y:
+        if self.points[0].y >= point.y:
             hy = True
         if self.points[3].x >= point.x:
             hx = True
-        if self.points[3].y >= point.y:
+        if self.points[3].y <= point.y:
             ly = True
         return lx and hx and ly and hy
 
