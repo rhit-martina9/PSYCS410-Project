@@ -147,7 +147,7 @@ class Rectangle(Shape):
         pass
 
     def area(self):
-        return abs(self.points[0].x - self.points[2].x)*abs(self.points[0].y - self.points[2].y)
+        return abs(self.defpoints[0].x - self.defpoints[1].x)*abs(self.defpoints[0].y - self.defpoints[1].y)
 
 
 class Triangle(Shape):
