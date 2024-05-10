@@ -189,7 +189,7 @@ class Triangle(Shape):
 
 class Circle(Shape):
     center: Point
-    radius: float
+    radius: int
 
     def is_point_in_shape(self, point: Point) -> bool:
         pdist = self.dist_point_point(point, self.center)
@@ -213,11 +213,12 @@ class Circle(Shape):
     def area(self):
         return math.pi*self.radius**2
 
-    def __init__(self, center: Point, outpoint: Point):
-        self.points = [center, outpoint]
+    def __init__(self, center: Point, radius: int):
+        # self.points = [center, outpoint]
         self.center = center
-        self.defpoints = (center, outpoint)
-        self.radius = self.dist_point_point(center, outpoint)
+        # self.defpoints = (center, outpoint)
+        # self.radius = self.dist_point_point(center, outpoint)
+        self.radius = radius
 
     def __new__(cls, center: Point, outpoint: Point):
         if center == outpoint:
