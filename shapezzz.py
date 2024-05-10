@@ -108,18 +108,15 @@ class Rectangle(Shape):
 
     def __init__(self, p1: Point, p2: Point):
         self.defpoints = (p1, p2)
-        p3 = Point(p1.x, p2.y)
-        p4 = Point(p2.x, p1.y)
-        if p1.y > p2.y:
-            if p1.x < p2.x:
-                self.points = [p1, p4, p2, p3]
-            else:
-                self.points = [p4, p1, p3, p2]
-        else:
-            if p1.x < p2.x:
-                self.points = [p4, p2, p3, p1]
-            else:
-                self.points = [p2, p4, p1, p3]
+        max_x = max(p1.x, p2.x)
+        min_x = min(p1.x, p2.x)
+        max_y = max(p1.y, p2.y)
+        min_y = min(p1.y, p2.y)
+        p1 = Point(max_x, max_y)
+        p2 = Point(min_x, max_y)
+        p3 = Point(max_x, min_y)
+        p4 = Point(min_x, min_y)
+        self.points = [p1, p2, p3, p4]
 
 
     def __new__(cls, p1: Point, p2: Point):
@@ -134,13 +131,13 @@ class Rectangle(Shape):
         hx = False
         ly = False
         hy = False
-        if self.points[0].x <= point.x:
+        if self.points[3].x <= point.x:
             lx = True
         if self.points[0].y >= point.y:
             hy = True
-        if self.points[2].x >= point.x:
+        if self.points[0].x >= point.x:
             hx = True
-        if self.points[2].y <= point.y:
+        if self.points[3].y <= point.y:
             ly = True
         return lx and hx and ly and hy
 
