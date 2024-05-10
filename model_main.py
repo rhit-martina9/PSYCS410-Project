@@ -32,7 +32,9 @@ def generate_rectangles(maxgrid: Point) -> list[Rectangle]:
             p2 = gridlist[p2i]
 
             new_rect = Rectangle(p1, p2)
-            if new_rect.area() >= maxgrid.x and new_rect.area() <= maxgrid.x*(maxgrid.x - 1):
+            if new_rect is None:
+                continue
+            if maxgrid.x <= new_rect.area() <= maxgrid.x*(maxgrid.x - 1):
                 output.append(new_rect)
 
     return output
