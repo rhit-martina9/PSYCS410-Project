@@ -80,12 +80,6 @@ def count_num_points_in_shape(shape):
                 count += 1
     return count
 
-
-def is_point_in_shape(shape, point):
-    # returns if a point is within a given shape. should be pretty simple if each shape is represented as a list of points
-    pass
-
-
 def generate_initial_distribution(shapes):
     # returns a 2D grid of probabilities for each hypothesis
     # this is based on just Bayes' rule and the size principle
@@ -159,32 +153,32 @@ def generate_likelihood(shapes, data, posterior):
                 likelihood[s][d] /= total
     return likelihood
 
-def generate_predictions(shapes, data, alpha, num_interations):
-    pass
+def generate_predictions(shapes, data, num_interations):
+    posterior = np.zeros(len(shapes), len(data))
+    likelihood = generate_init_likelihood(shapes, data)
+    prior = generate_prior(shapes)
+    for i in range(num_interations):
+        posterior = generate_posterior(shapes, data, likelihood, prior)
+        likelihood = generate_likelihood(shapes, data, posterior)
+    
+    predictions = np.zeros((len(shapes), GRID_WIDTH, GRID_HEIGHT))
+    for s in range(len(shapes)):
+        for d in range(len(data)):
+            x1 = data[d][0].x
+            x2 = data[d][1].x
+            y1 = data[d][0].y
+            y2 = data[d][1].y
+            predictions[s][x1][y1] += posterior[s][d]
+            predictions[s][x2][y2] += posterior[s][d]
+    return predictions
 
 def main():
     rects = generate_rectangles(Point(GRID_WIDTH, GRID_HEIGHT))
-    # triangs = generate_triangles(Point(GRID_WIDTH, GRID_HEIGHT))
-    # circles = generate_circles(Point(GRID_WIDTH, GRID_HEIGHT))
-    # print(f"rects: {len(rects)}")
-    # print(f"triangs: {len(triangs)}")
-    # print(f"circs: {len(circles)}")
-    # probs = generate_predictions(rects, 1, 3)
-    # print(rects[113].points)
-    # print(probs[113])
-    data = generate_data()
-    l = generate_init_likelihood(rects, data)
-    prior = generate_prior(rects)
-    p = generate_posterior(rects, data, l, prior)
-    li = generate_likelihood(rects, data, p)
-    print(data)
-    print(l)
-    print(p)
-    print(li)
-    # print(rects[20].points)
-    # print(rects[20].defpoints)
-    # print(rects[20].is_point_in_shape(Point(1,1)))
-    # print(l[20])
+    triangs = generate_triangles(Point(GRID_WIDTH, GRID_HEIGHT))
+    circles = generate_circles(Point(GRID_WIDTH, GRID_HEIGHT))
+    print(f"rects: {len(rects)}")
+    print(f"triangs: {len(triangs)}")
+    print(f"circs: {len(circles)}")
 
 if __name__ == "__main__":
     main()
