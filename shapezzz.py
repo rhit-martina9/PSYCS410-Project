@@ -122,6 +122,8 @@ class Rectangle(Shape):
     def __new__(cls, p1: Point, p2: Point):
         if p1 == p2:
             return None
+        if p1.x == p1.x or p2.y == p2.y:
+            return None
         self = object.__new__(cls)
         return self
 
