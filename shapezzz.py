@@ -112,10 +112,10 @@ class Rectangle(Shape):
         min_x = min(p1.x, p2.x)
         max_y = max(p1.y, p2.y)
         min_y = min(p1.y, p2.y)
-        p1 = Point(max_x, max_y)
-        p2 = Point(min_x, max_y)
-        p3 = Point(max_x, min_y)
-        p4 = Point(min_x, min_y)
+        p1 = Point(min_x, max_y)
+        p2 = Point(max_x, max_y)
+        p3 = Point(min_x, min_y)
+        p4 = Point(max_x, min_y)
         self.points = [p1, p2, p3, p4]
 
 
@@ -133,13 +133,13 @@ class Rectangle(Shape):
         hx = False
         ly = False
         hy = False
-        if self.points[3].x <= point.x:
+        if self.points[0].x <= point.x:
             lx = True
         if self.points[0].y >= point.y:
             hy = True
-        if self.points[0].x >= point.x:
+        if self.points[2].x >= point.x:
             hx = True
-        if self.points[3].y <= point.y:
+        if self.points[2].y <= point.y:
             ly = True
         return lx and hx and ly and hy
 
