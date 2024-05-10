@@ -3,9 +3,7 @@ import numpy as np
 GRID_WIDTH = 10
 GRID_HEIGHT = 10
 
-
 from shapezzz import Point, Rectangle, Circle, Triangle
-
 
 def creategridlist(maxgrid: Point) -> list[Point]:
     gridpoints: list[Point] = []
