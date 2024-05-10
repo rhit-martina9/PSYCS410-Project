@@ -57,7 +57,6 @@ def generate_circles(maxgrid: Point) -> list[Circle]:
             if radius > min(p1.x, p1.y, maxgrid.x-p1.x, maxgrid.y-p1.y):
                 continue
 
-            print(p1, radius)
             output.append(Circle(p1, radius))
     return output
 
