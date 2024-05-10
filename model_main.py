@@ -1,7 +1,7 @@
 import math
 import numpy as np
-GRID_WIDTH = 2
-GRID_HEIGHT = 2
+GRID_WIDTH = 10
+GRID_HEIGHT = 10
 
 
 from shapezzz import Point, Rectangle, Circle, Triangle
@@ -22,33 +22,30 @@ def createshapegridlist(maxgrid: Point) -> list[Point]:
     return gridpoints
 
 
-def generate_rectangles(maxgrid: Point) -> list[Rectangle]:
+def generate_rectangles(maxgrid: Point, area_range: list[float]) -> list[Rectangle]:
     # returns a list of all possible rectangles - each rectangle is a list of points within the rectangle
     output: list[Rectangle] = []
     gridlist = createshapegridlist(maxgrid)
-    for p1i in range(len(gridlist)):
-        p1 = gridlist[p1i]
+    for p1i, p1 in enumerate(gridlist):
         for p2i in range(p1i + 1, len(gridlist)):
             p2 = gridlist[p2i]
 
             new_rect = Rectangle(p1, p2)
             if new_rect is None:
                 continue
-            if maxgrid.x <= new_rect.area() <= maxgrid.x*(maxgrid.x - 1):
-                output.append(new_rect)
-
+            if area_range[0] < new_rect.area() < area_range[1]:
+                if sum(1 if new_rect.points == rect.points else 0 for rect in output) == 0:
+                    output.append(new_rect)
     return output
 
 
-def generate_circles(maxgrid: Point) -> list[Circle]:
+def generate_circles(maxgrid: Point, area_range: list[float]) -> list[Circle]:
     # returns a list of all possible circles - each circle is a list of points within the circle
     output: list[Circle] = []
     gridlist = createshapegridlist(maxgrid)
-    for p1i in range(len(gridlist)):
-        p1 = gridlist[p1i]
-
-        min_radius = math.ceil(math.sqrt(maxgrid.x / math.pi))
-        max_radius = math.floor(math.sqrt(maxgrid.x * (maxgrid.x + 1) / math.pi))
+    min_radius = math.ceil(math.sqrt(area_range[0] / math.pi))
+    max_radius = math.floor(math.sqrt(area_range[1] / math.pi))
+    for p1 in gridlist:
         for radius in range(min_radius, max_radius + 1):
             if radius > min(p1.x, p1.y, maxgrid.x-p1.x, maxgrid.y-p1.y):
                 continue
@@ -57,7 +54,7 @@ def generate_circles(maxgrid: Point) -> list[Circle]:
     return output
 
 
-def generate_triangles(maxgrid: Point) -> list[Triangle]:
+def generate_triangles(maxgrid: Point, area_range: list[float]) -> list[Triangle]:
     # returns a list of all possible triangles - each triangle is a list of points within the triangle
     output: list[Triangle] = []
     gridpoints: list[Point] = createshapegridlist(maxgrid)
@@ -66,7 +63,7 @@ def generate_triangles(maxgrid: Point) -> list[Triangle]:
             for p3i in range(p2i + 1, len(gridpoints)):
                 if not Triangle.test_colinear(gridpoints[p1i], gridpoints[p2i], gridpoints[p3i]):
                     new_tri = Triangle(gridpoints[p1i], gridpoints[p2i], gridpoints[p3i])
-                    if new_tri.area() >= maxgrid.x and new_tri.area() <= maxgrid.x*(maxgrid.x - 1):
+                    if area_range[0] < new_tri.area() < area_range[1]:
                         output.append(new_tri)
     return output
 
@@ -173,12 +170,30 @@ def generate_predictions(shapes, data, num_interations):
     return predictions
 
 def main():
-    rects = generate_rectangles(Point(GRID_WIDTH, GRID_HEIGHT))
-    triangs = generate_triangles(Point(GRID_WIDTH, GRID_HEIGHT))
-    circles = generate_circles(Point(GRID_WIDTH, GRID_HEIGHT))
+    area_range = [0.1*GRID_WIDTH*GRID_HEIGHT, 0.7*GRID_WIDTH*GRID_HEIGHT]
+    rects = generate_rectangles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
+    triangs = generate_triangles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
+    circles = generate_circles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
+    print()
     print(f"rects: {len(rects)}")
     print(f"triangs: {len(triangs)}")
     print(f"circs: {len(circles)}")
+    # probs = generate_predictions(rects, 1, 3)
+    # print(rects[113].points)
+    # print(probs[113])
+    data = generate_data()
+    l = generate_init_likelihood(rects, data)
+    prior = generate_prior(rects)
+    p = generate_posterior(rects, data, l, prior)
+    li = generate_likelihood(rects, data, p)
+    print(data)
+    print(l)
+    print(p)
+    print(li)
+    # print(rects[20].points)
+    # print(rects[20].defpoints)
+    # print(rects[20].is_point_in_shape(Point(1,1)))
+    # print(l[20])
 
 if __name__ == "__main__":
     main()
