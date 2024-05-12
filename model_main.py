@@ -1,11 +1,10 @@
 import math
 import numpy as np
-GRID_WIDTH = 2
-GRID_HEIGHT = 2
-
-
 from shapezzz import Point, Rectangle, Circle, Triangle
+from data_viz import show_indiv_shape, show_summary
 
+GRID_WIDTH = 10
+GRID_HEIGHT = 10
 
 def creategridlist(maxgrid: Point) -> list[Point]:
     gridpoints: list[Point] = []
@@ -138,8 +137,9 @@ def generate_posterior(shapes, data, likelihood, prior):
         total = 0
         for s in range(len(shapes)):
             total += posterior[s][d]
-        for s in range(len(shapes)):
-            posterior[s][d] /= total
+        if total != 0:
+            for s in range(len(shapes)):
+                posterior[s][d] /= total
     return posterior
 
 def generate_likelihood(shapes, data, posterior):
@@ -154,7 +154,7 @@ def generate_likelihood(shapes, data, posterior):
     return likelihood
 
 def generate_predictions(shapes, data, num_interations):
-    posterior = np.zeros(len(shapes), len(data))
+    posterior = np.zeros((len(shapes), len(data)))
     likelihood = generate_init_likelihood(shapes, data)
     prior = generate_prior(shapes)
     for i in range(num_interations):
@@ -170,15 +170,25 @@ def generate_predictions(shapes, data, num_interations):
             y2 = data[d][1].y
             predictions[s][x1][y1] += posterior[s][d]
             predictions[s][x2][y2] += posterior[s][d]
+        predictions[s] /= np.sum(predictions[s])
     return predictions
 
 def main():
     rects = generate_rectangles(Point(GRID_WIDTH, GRID_HEIGHT))
     triangs = generate_triangles(Point(GRID_WIDTH, GRID_HEIGHT))
     circles = generate_circles(Point(GRID_WIDTH, GRID_HEIGHT))
+
     print(f"rects: {len(rects)}")
     print(f"triangs: {len(triangs)}")
     print(f"circs: {len(circles)}")
+
+    pairs_of_points = generate_data()
+    circ_pred = generate_predictions(circles, pairs_of_points, 3)
+    triangs_pred = generate_predictions(triangs, pairs_of_points, 3)
+    rects_pred = generate_predictions(rects, pairs_of_points, 3)
+
+    show_indiv_shape(triangs[35], circ_pred[30], GRID_WIDTH, GRID_HEIGHT)
+
 
 if __name__ == "__main__":
     main()

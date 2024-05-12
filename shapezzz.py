@@ -1,7 +1,9 @@
 import abc
 import logging
 import math
+import numpy as np
 from dataclasses import dataclass
+import matplotlib.patches 
 
 
 @dataclass()
@@ -41,6 +43,10 @@ class Shape(abc.ABC):
 
     @abc.abstractmethod
     def generateShape(self):
+        pass
+
+    @abc.abstractmethod
+    def drawShape(self):
         pass
 
     @staticmethod
@@ -112,9 +118,9 @@ class Rectangle(Shape):
         min_x = min(p1.x, p2.x)
         max_y = max(p1.y, p2.y)
         min_y = min(p1.y, p2.y)
-        p1 = Point(min_x, max_y)
-        p2 = Point(max_x, max_y)
-        p3 = Point(min_x, min_y)
+        p1 = Point(min_x, min_y)
+        p2 = Point(min_x, max_y)
+        p3 = Point(max_x, max_y)
         p4 = Point(max_x, min_y)
         self.points = [p1, p2, p3, p4]
 
@@ -148,6 +154,12 @@ class Rectangle(Shape):
 
     def area(self):
         return abs(self.defpoints[0].x - self.defpoints[1].x)*abs(self.defpoints[0].y - self.defpoints[1].y)
+    
+    def drawShape(self):
+        width = self.points[2].x - self.points[0].x
+        height = self.points[2].y - self.points[0].y
+        return matplotlib.patches.Rectangle((self.points[0].x, self.points[0].y), width, height, 
+                         fill=False, linewidth=3, color="r")
 
 
 class Triangle(Shape):
@@ -184,6 +196,13 @@ class Triangle(Shape):
             return None
         self = object.__new__(cls)
         return self
+    
+    def drawShape(self):
+        xy = np.zeros((3, 2))
+        for i in range(3):
+            xy[i][0] = self.points[i].x
+            xy[i][1] = self.points[i].y
+        return matplotlib.patches.Polygon(xy, closed=True, fill=False, linewidth=3, color="r")
 
 
 class Circle(Shape):
@@ -224,3 +243,7 @@ class Circle(Shape):
             return None
         self = object.__new__(cls)
         return self
+    
+    def drawShape(self):
+        return matplotlib.patches.Circle((self.center.x, self.center.y), self.radius,
+                                         fill=False, linewidth=3, color="r")
