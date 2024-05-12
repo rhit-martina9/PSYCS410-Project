@@ -1,7 +1,7 @@
 import math
 import numpy as np
 from shapezzz import Point, Rectangle, Circle, Triangle
-from data_viz import show_indiv_shape, show_summary
+import analysis
 
 GRID_WIDTH = 10
 GRID_HEIGHT = 10
@@ -185,7 +185,16 @@ def main():
     # triangs_pred = generate_predictions(triangs, pairs_of_points, 3)
     rects_pred = generate_predictions(rects, pairs_of_points, 3)
 
-    show_indiv_shape(circles[5], circ_pred[5], GRID_WIDTH, GRID_HEIGHT)
+    cr, fr = analysis.calculate_percentage_corner(rects, rects_pred, GRID_WIDTH, GRID_HEIGHT)
+    print("Rectangles: in corner {c}%, outiside corner {o}%".format(c=cr, o=fr))
+
+    # ct, ft = analysis.calculate_percentage_corner(triangs, triangs_pred)
+    # print("Triangles: in corner {c}%, outiside corner {o}%".format(c=ct, o=ft))
+
+    cc, fc = analysis.calculate_percentage_boundary(circles, circ_pred, GRID_WIDTH, GRID_HEIGHT)
+    print("Circles: on boundary {c}%, outiside boundary {o}%".format(c=cc, o=fc))
+
+    analysis.show_indiv_shape(circles[5], circ_pred[5], GRID_WIDTH, GRID_HEIGHT)
 
 
 if __name__ == "__main__":
