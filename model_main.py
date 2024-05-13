@@ -139,6 +139,17 @@ def generate_posterior(shapes, data, likelihood, prior):
                 posterior[s][d] /= total
     return posterior
 
+def log(posterior, iteration, shape_type, data_type):
+    f = open(shape_type + "_" + data_type + "_" + str(iteration) + ".txt", "a")
+    for s in range(len(posterior)):
+        f.write(str(s) + ":")
+        for data in posterior[s]:
+            f.write(str(data))
+            f.write(",")
+        f.write("\n")
+    f.close()
+
+
 def generate_likelihood(shapes, data, posterior):
     likelihood = np.zeros(shape=(len(shapes), len(data)))
     for s in range(len(shapes)):
@@ -150,13 +161,15 @@ def generate_likelihood(shapes, data, posterior):
                 likelihood[s][d] /= total
     return likelihood
 
-def generate_predictions(shapes, data, num_interations):
+def generate_predictions(shapes, data, num_interations, t):
     posterior = np.zeros((len(shapes), len(data)))
     likelihood = generate_init_likelihood(shapes, data)
     prior = generate_prior(shapes)
     for i in range(num_interations):
         posterior = generate_posterior(shapes, data, likelihood, prior)
+        log(posterior, i, t, "posterior")
         likelihood = generate_likelihood(shapes, data, posterior)
+        log(likelihood, i, t, "likelihood")
     
     predictions = np.zeros((len(shapes), GRID_WIDTH, GRID_HEIGHT))
     for s in range(len(shapes)):
@@ -172,21 +185,21 @@ def generate_predictions(shapes, data, num_interations):
 
 def main():
     area_range = [0.1*GRID_WIDTH*GRID_HEIGHT, 0.7*GRID_WIDTH*GRID_HEIGHT]
-    rects = generate_rectangles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
-    triangs = generate_triangles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
+    # rects = generate_rectangles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
+    # triangs = generate_triangles(Point(GRID_WIDTH, GRID_HEIGHT), [0.1*GRID_WIDTH*GRID_HEIGHT, 0.25*GRID_WIDTH*GRID_HEIGHT])
     circles = generate_circles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
     
-    print(f"rects: {len(rects)}")
-    print(f"triangs: {len(triangs)}")
+    # print(f"rects: {len(rects)}")
+    # print(f"triangs: {len(triangs)}")
     print(f"circs: {len(circles)}")
 
     pairs_of_points = generate_data()
-    circ_pred = generate_predictions(circles, pairs_of_points, 3)
-    # triangs_pred = generate_predictions(triangs, pairs_of_points, 3)
-    rects_pred = generate_predictions(rects, pairs_of_points, 3)
+    circ_pred = generate_predictions(circles, pairs_of_points, 3, "circs")
+    # triangs_pred = generate_predictions(triangs, pairs_of_points, 3, "triangs")
+    # rects_pred = generate_predictions(rects, pairs_of_points, 3, "rects")
 
-    cr, fr = analysis.calculate_percentage_corner(rects, rects_pred, GRID_WIDTH, GRID_HEIGHT)
-    print("Rectangles: in corner {c}%, outiside corner {o}%".format(c=cr, o=fr))
+    # cr, fr = analysis.calculate_percentage_corner(rects, rects_pred, GRID_WIDTH, GRID_HEIGHT)
+    # print("Rectangles: in corner {c}%, outiside corner {o}%".format(c=cr, o=fr))
 
     # ct, ft = analysis.calculate_percentage_corner(triangs, triangs_pred)
     # print("Triangles: in corner {c}%, outiside corner {o}%".format(c=ct, o=ft))
@@ -194,7 +207,7 @@ def main():
     cc, fc = analysis.calculate_percentage_boundary(circles, circ_pred, GRID_WIDTH, GRID_HEIGHT)
     print("Circles: on boundary {c}%, outiside boundary {o}%".format(c=cc, o=fc))
 
-    analysis.show_indiv_shape(circles[5], circ_pred[5], GRID_WIDTH, GRID_HEIGHT)
+    # analysis.show_indiv_shape(circles[5], circ_pred[5], GRID_WIDTH, GRID_HEIGHT)
 
 
 if __name__ == "__main__":
