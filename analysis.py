@@ -45,6 +45,30 @@ def calculate_percentage_boundary(shapes, preds, width, height):
     percent_far = num_far / (num_close + num_far)
     return (percent_close, percent_far)
 
+def gen_boundary_vis():
+    shapes = ["Rectangles", "Circles", "Triangles"]
+    label = ["Corner", "Boundary", "Corner"]
+    data_type = ["Model", "Human"]
+    data = []
+    data.append({"In Corner": np.array([0.893849, 1]), "Outside Corner": np.array([0.106151, 0])})
+    data.append({"On Boundary": np.array([0.803692, 1]), "Outside Bundary": np.array([0.196308, 0])})
+    data.append({"In Corner": np.array([0.958974, 1]), "Outside Corner": np.array([0.041026, 0])})
+
+    for i in range(len(shapes)):
+        fig, ax = plt.subplots()
+        bottom = np.array([0.0,0.0])
+
+        for boolean, percent in data[i].items():
+            p = ax.bar(data_type, percent, 0.5, label=boolean, bottom=bottom)
+            bottom += percent
+
+        ax.set_title("Percent of Predictions on the " + label[i] + " of " + shapes[i])
+        ax.legend(loc="upper right")
+
+        plt.show()
+
+gen_boundary_vis()
+
 
 
 

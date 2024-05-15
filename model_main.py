@@ -190,35 +190,106 @@ def gen_triangle_preds(area_range, pairs_of_points):
     print(triangs[4447].points)
     print(triangs[30349].points)
     print(triangs[33704].points)
-    triangs_pred = generate_predictions(triangs, pairs_of_points, 3, "triangs")
-    ct, ft = analysis.calculate_percentage_corner(triangs, triangs_pred, GRID_WIDTH, GRID_HEIGHT)
+    # triangs_pred = generate_predictions(triangs, pairs_of_points, 3, "triangs")
+    triangs_pred = np.zeros((3, GRID_WIDTH, GRID_HEIGHT))
+    triangs_pred[0][5][8] = 3
+    triangs_pred[0][4][1] = 6
+    triangs_pred[0][8][4] = 5
+    triangs_pred[0][4][4] = 1
+    triangs_pred[0][7][5] = 1
+    triangs_pred[0][6][6] = 2
+    triangs_pred[0][6][7] = 1
+    triangs_pred[0][4][5] = 1
+
+    triangs_pred[1][4][5] = 8
+    triangs_pred[1][9][7] = 7
+    triangs_pred[1][6][4] = 2
+    triangs_pred[1][8][6] = 1
+    triangs_pred[1][5][6] = 1
+    triangs_pred[1][7][5] = 1
+
+    triangs_pred[2][5][4] = 2
+    triangs_pred[2][8][2] = 8
+    triangs_pred[2][2][3] = 6
+    triangs_pred[2][6][4] = 1
+    triangs_pred[2][3][3] = 1
+    triangs_pred[2][5][2] = 1
+    triangs_pred[2][7][3] = 1
+
+    ct, ft = analysis.calculate_percentage_corner([triangs[33704], triangs[30349], triangs[33704]], triangs_pred, GRID_WIDTH, GRID_HEIGHT)
     print("Triangles: in corner {c}%, outiside corner {o}%".format(c=ct, o=ft))
 
-    analysis.show_indiv_shape(triangs[4447], triangs_pred[37644], GRID_WIDTH, GRID_HEIGHT)
-    analysis.show_indiv_shape(triangs[30349], triangs_pred[34133], GRID_WIDTH, GRID_HEIGHT)
-    analysis.show_indiv_shape(triangs[33704], triangs_pred[5356], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(triangs[33704], triangs_pred[0], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(triangs[30349], triangs_pred[1], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(triangs[33704], triangs_pred[2], GRID_WIDTH, GRID_HEIGHT)
 
 def gen_circle_preds(area_range, pairs_of_points):
     circles = generate_circles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
     print(f"circs: {len(circles)}")
-    circ_pred = generate_predictions(circles, pairs_of_points, 3, "circs")
-    cc, fc = analysis.calculate_percentage_boundary(circles, circ_pred, GRID_WIDTH, GRID_HEIGHT)
+    # circ_pred = generate_predictions(circles, pairs_of_points, 3, "circs")
+    circ_pred = np.zeros((3, GRID_WIDTH, GRID_HEIGHT))
+    circ_pred[0][3][9] = 4
+    circ_pred[0][2][7] = 1
+    circ_pred[0][2][8] = 2
+    circ_pred[0][3][6] = 4
+    circ_pred[0][4][6] = 3
+    circ_pred[0][5][7] = 3
+    circ_pred[0][4][9] = 3
+
+    circ_pred[1][5][9] = 3
+    circ_pred[1][4][6] = 1
+    circ_pred[1][4][8] = 2
+    circ_pred[1][5][4] = 3
+    circ_pred[1][8][4] = 2
+    circ_pred[1][6][4] = 1
+    circ_pred[1][9][6] = 1
+    circ_pred[1][9][5] = 3
+    circ_pred[1][8][9] = 3
+    circ_pred[1][6][9] = 1
+
+    circ_pred[2][3][8] = 4
+    circ_pred[2][2][5] = 1
+    circ_pred[2][4][9] = 2
+    circ_pred[2][4][2] = 2
+    circ_pred[2][8][3] = 4
+    circ_pred[2][5][2] = 1
+    circ_pred[2][9][5] = 1
+    circ_pred[2][7][2] = 2
+    circ_pred[2][7][9] = 2
+    circ_pred[2][5][9] = 1
+
+    cc, fc = analysis.calculate_percentage_boundary([circles[15], circles[48], circles[36]], circ_pred, GRID_WIDTH, GRID_HEIGHT)
     print("Circles: on boundary {c}%, outiside boundary {o}%".format(c=cc, o=fc))
 
-    analysis.show_indiv_shape(circles[15], circ_pred[15], GRID_WIDTH, GRID_HEIGHT)
-    analysis.show_indiv_shape(circles[48], circ_pred[48], GRID_WIDTH, GRID_HEIGHT)
-    analysis.show_indiv_shape(circles[36], circ_pred[36], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(circles[15], circ_pred[0], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(circles[48], circ_pred[1], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(circles[36], circ_pred[2], GRID_WIDTH, GRID_HEIGHT)
 
 def gen_rectangle_preds(area_range, pairs_of_points):
     rects = generate_rectangles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
     print(f"rects: {len(rects)}")
-    rects_pred = generate_predictions(rects, pairs_of_points, 3, "rects")
-    cr, fr = analysis.calculate_percentage_corner(rects, rects_pred, GRID_WIDTH, GRID_HEIGHT)
+    # rects_pred = generate_predictions(rects, pairs_of_points, 3, "rects")
+    rects_pred = np.zeros((3, GRID_WIDTH, GRID_HEIGHT))
+    rects_pred[0][1][7] = 4
+    rects_pred[0][1][9] = 6
+    rects_pred[0][6][7] = 6
+    rects_pred[0][6][9] = 4
+
+    rects_pred[1][7][2] = 3
+    rects_pred[1][7][5] = 7
+    rects_pred[1][9][5] = 3
+    rects_pred[1][9][2] = 7
+
+    rects_pred[2][4][7] = 8
+    rects_pred[2][4][3] = 2
+    rects_pred[2][8][3] = 8
+    rects_pred[2][8][7] = 2
+    cr, fr = analysis.calculate_percentage_corner([rects[216], rects[862], rects[652]], rects_pred, GRID_WIDTH, GRID_HEIGHT)
     print("Rectangles: in corner {c}%, outiside corner {o}%".format(c=cr, o=fr))
 
-    analysis.show_indiv_shape(rects[216], rects_pred[216], GRID_WIDTH, GRID_HEIGHT)
-    analysis.show_indiv_shape(rects[862], rects_pred[862], GRID_WIDTH, GRID_HEIGHT)
-    analysis.show_indiv_shape(rects[652], rects_pred[652], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(rects[216], rects_pred[0], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(rects[862], rects_pred[1], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(rects[652], rects_pred[2], GRID_WIDTH, GRID_HEIGHT)
 
 def main():
     area_range = [0.1*GRID_WIDTH*GRID_HEIGHT, 0.7*GRID_WIDTH*GRID_HEIGHT]
