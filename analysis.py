@@ -17,6 +17,20 @@ def show_indiv_shape(shape, preds, width, height):
     ax.grid(True, markevery=1, color="k")
     plt.show()
 
+def show_indiv_shape_blank(shape, width, height):
+    fig, ax = plt.subplots()
+    ax.imshow(np.zeros((width, height)), cmap="Greys", origin="lower")
+
+    shape_patch = shape.drawShape()
+    ax.add_patch(shape_patch)
+    ax.set_xlim(xmin=0, xmax=width)
+    ax.set_ylim(ymin=0, ymax=height)
+
+    ax.set_xticks(np.arange(0, width+1, 1))
+    ax.set_yticks(np.arange(0, height+1, 1))
+    ax.grid(True, markevery=1, color="k")
+    plt.show()
+
 def calculate_percentage_corner(shapes, preds, width, height):
     num_close = 0.0
     num_far = 0.0

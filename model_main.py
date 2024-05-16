@@ -322,9 +322,30 @@ def gen_rectangle_human_data(area_range):
     analysis.show_indiv_shape(rects[862], rects_pred[1], GRID_WIDTH, GRID_HEIGHT)
     analysis.show_indiv_shape(rects[652], rects_pred[2], GRID_WIDTH, GRID_HEIGHT)
 
+def show_blank_shapes():
+    rects = generate_rectangles(Point(GRID_WIDTH, GRID_HEIGHT), [0.1*GRID_WIDTH*GRID_HEIGHT, 0.7*GRID_WIDTH*GRID_HEIGHT])
+    circles = generate_circles(Point(GRID_WIDTH, GRID_HEIGHT), [0.1*GRID_WIDTH*GRID_HEIGHT, 0.7*GRID_WIDTH*GRID_HEIGHT])
+    triangs = generate_triangles(Point(GRID_WIDTH, GRID_HEIGHT), [0.1*GRID_WIDTH*GRID_HEIGHT, 0.25*GRID_WIDTH*GRID_HEIGHT])
+
+    blank_preds = np.zeros((GRID_WIDTH, GRID_HEIGHT))
+
+    analysis.show_indiv_shape_blank(rects[216], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape_blank(rects[862], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape_blank(rects[652], GRID_WIDTH, GRID_HEIGHT)
+
+    analysis.show_indiv_shape_blank(circles[15], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape_blank(circles[48], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape_blank(circles[36], GRID_WIDTH, GRID_HEIGHT)
+
+    analysis.show_indiv_shape_blank(triangs[33704], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape_blank(triangs[30349], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape_blank(triangs[4447], GRID_WIDTH, GRID_HEIGHT)
+
 def main():
     area_range = [0.1*GRID_WIDTH*GRID_HEIGHT, 0.7*GRID_WIDTH*GRID_HEIGHT]
     pairs_of_points = generate_data()
+
+    show_blank_shapes()
 
     gen_circle_preds(area_range, pairs_of_points)
     gen_circle_human_data(area_range)
