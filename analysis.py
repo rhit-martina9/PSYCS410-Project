@@ -52,7 +52,7 @@ def gen_boundary_vis():
     data = []
     data.append({"In Corner": np.array([0.893849, 1]), "Outside Corner": np.array([0.106151, 0])})
     data.append({"On Boundary": np.array([0.803692, 1]), "Outside Bundary": np.array([0.196308, 0])})
-    data.append({"In Corner": np.array([0.958974, 1]), "Outside Corner": np.array([0.041026, 0])})
+    data.append({"In Corner": np.array([0.958974, 0.7]), "Outside Corner": np.array([0.041026, 0.3])})
 
     for i in range(len(shapes)):
         fig, ax = plt.subplots()
@@ -63,11 +63,10 @@ def gen_boundary_vis():
             bottom += percent
 
         ax.set_title("Percent of Predictions on the " + label[i] + " of " + shapes[i])
+        ax.set_ylim(ymin=0, ymax=1)
         ax.legend(loc="upper right")
 
         plt.show()
-
-gen_boundary_vis()
 
 
 

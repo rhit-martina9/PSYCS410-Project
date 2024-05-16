@@ -187,10 +187,18 @@ def generate_predictions(shapes, data, num_interations, t):
 def gen_triangle_preds(area_range, pairs_of_points):
     triangs = generate_triangles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
     print(f"triangs: {len(triangs)}")
-    print(triangs[4447].points)
-    print(triangs[30349].points)
-    print(triangs[33704].points)
-    # triangs_pred = generate_predictions(triangs, pairs_of_points, 3, "triangs")
+    triangs_pred = generate_predictions(triangs, pairs_of_points, 3, "triangs")
+
+    ct, ft = analysis.calculate_percentage_corner(triangs, triangs_pred, GRID_WIDTH, GRID_HEIGHT)
+    print("Triangles [Model ]: in corner {c}%, outiside corner {o}%".format(c=100*ct, o=100*ft))
+
+    analysis.show_indiv_shape(triangs[33704], triangs_pred[33704], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(triangs[30349], triangs_pred[30349], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(triangs[4447], triangs_pred[4447], GRID_WIDTH, GRID_HEIGHT)
+
+def gen_triangle_human_data(area_range):
+    triangs = generate_triangles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
+
     triangs_pred = np.zeros((3, GRID_WIDTH, GRID_HEIGHT))
     triangs_pred[0][5][8] = 3
     triangs_pred[0][4][1] = 6
@@ -216,17 +224,28 @@ def gen_triangle_preds(area_range, pairs_of_points):
     triangs_pred[2][5][2] = 1
     triangs_pred[2][7][3] = 1
 
-    ct, ft = analysis.calculate_percentage_corner([triangs[33704], triangs[30349], triangs[33704]], triangs_pred, GRID_WIDTH, GRID_HEIGHT)
-    print("Triangles: in corner {c}%, outiside corner {o}%".format(c=ct, o=ft))
+    ct, ft = analysis.calculate_percentage_corner([triangs[33704], triangs[30349], triangs[4447]], triangs_pred, GRID_WIDTH, GRID_HEIGHT)
+    print("Triangles [Human]: in corner {c}%, outside corner {o}%".format(c=100*ct, o=100*ft))
 
     analysis.show_indiv_shape(triangs[33704], triangs_pred[0], GRID_WIDTH, GRID_HEIGHT)
     analysis.show_indiv_shape(triangs[30349], triangs_pred[1], GRID_WIDTH, GRID_HEIGHT)
-    analysis.show_indiv_shape(triangs[33704], triangs_pred[2], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(triangs[4447], triangs_pred[2], GRID_WIDTH, GRID_HEIGHT)    
 
 def gen_circle_preds(area_range, pairs_of_points):
     circles = generate_circles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
     print(f"circs: {len(circles)}")
-    # circ_pred = generate_predictions(circles, pairs_of_points, 3, "circs")
+    circ_pred = generate_predictions(circles, pairs_of_points, 3, "circs")
+
+    cc, fc = analysis.calculate_percentage_boundary(circles, circ_pred, GRID_WIDTH, GRID_HEIGHT)
+    print("Circles [Model]: on boundary {c}%, outside boundary {o}%".format(c=100*cc, o=100*fc))
+
+    analysis.show_indiv_shape(circles[15], circ_pred[15], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(circles[48], circ_pred[48], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(circles[36], circ_pred[36], GRID_WIDTH, GRID_HEIGHT)
+
+def gen_circle_human_data(area_range):
+    circles = generate_circles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
+
     circ_pred = np.zeros((3, GRID_WIDTH, GRID_HEIGHT))
     circ_pred[0][3][9] = 4
     circ_pred[0][2][7] = 1
@@ -259,7 +278,7 @@ def gen_circle_preds(area_range, pairs_of_points):
     circ_pred[2][5][9] = 1
 
     cc, fc = analysis.calculate_percentage_boundary([circles[15], circles[48], circles[36]], circ_pred, GRID_WIDTH, GRID_HEIGHT)
-    print("Circles: on boundary {c}%, outiside boundary {o}%".format(c=cc, o=fc))
+    print("Circles [Human]: on boundary {c}%, outside boundary {o}%".format(c=100*cc, o=100*fc))
 
     analysis.show_indiv_shape(circles[15], circ_pred[0], GRID_WIDTH, GRID_HEIGHT)
     analysis.show_indiv_shape(circles[48], circ_pred[1], GRID_WIDTH, GRID_HEIGHT)
@@ -268,7 +287,19 @@ def gen_circle_preds(area_range, pairs_of_points):
 def gen_rectangle_preds(area_range, pairs_of_points):
     rects = generate_rectangles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
     print(f"rects: {len(rects)}")
-    # rects_pred = generate_predictions(rects, pairs_of_points, 3, "rects")
+    rects_pred = generate_predictions(rects, pairs_of_points, 3, "rects")
+
+    cr, fr = analysis.calculate_percentage_corner(rects, rects_pred, GRID_WIDTH, GRID_HEIGHT)
+    print("Rectangles [Model]: in corner {c}%, outside corner {o}%".format(c=100*cr, o=100*fr))
+
+    analysis.show_indiv_shape(rects[216], rects_pred[216], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(rects[862], rects_pred[862], GRID_WIDTH, GRID_HEIGHT)
+    analysis.show_indiv_shape(rects[652], rects_pred[652], GRID_WIDTH, GRID_HEIGHT)
+
+def gen_rectangle_human_data(area_range):
+    rects = generate_rectangles(Point(GRID_WIDTH, GRID_HEIGHT), area_range)
+    print(f"rects: {len(rects)}")
+
     rects_pred = np.zeros((3, GRID_WIDTH, GRID_HEIGHT))
     rects_pred[0][1][7] = 4
     rects_pred[0][1][9] = 6
@@ -285,7 +316,7 @@ def gen_rectangle_preds(area_range, pairs_of_points):
     rects_pred[2][8][3] = 8
     rects_pred[2][8][7] = 2
     cr, fr = analysis.calculate_percentage_corner([rects[216], rects[862], rects[652]], rects_pred, GRID_WIDTH, GRID_HEIGHT)
-    print("Rectangles: in corner {c}%, outiside corner {o}%".format(c=cr, o=fr))
+    print("Rectangles [Human]: in corner {c}%, outside corner {o}%".format(c=100*cr, o=100*fr))
 
     analysis.show_indiv_shape(rects[216], rects_pred[0], GRID_WIDTH, GRID_HEIGHT)
     analysis.show_indiv_shape(rects[862], rects_pred[1], GRID_WIDTH, GRID_HEIGHT)
@@ -294,9 +325,17 @@ def gen_rectangle_preds(area_range, pairs_of_points):
 def main():
     area_range = [0.1*GRID_WIDTH*GRID_HEIGHT, 0.7*GRID_WIDTH*GRID_HEIGHT]
     pairs_of_points = generate_data()
-    # gen_circle_preds(area_range, pairs_of_points)
-    # gen_rectangle_preds(area_range, pairs_of_points)
+
+    gen_circle_preds(area_range, pairs_of_points)
+    gen_circle_human_data(area_range)
+
+    gen_rectangle_preds(area_range, pairs_of_points)
+    gen_rectangle_human_data(area_range)
+
     gen_triangle_preds([0.1*GRID_WIDTH*GRID_HEIGHT, 0.25*GRID_WIDTH*GRID_HEIGHT], pairs_of_points)
+    gen_triangle_human_data([0.1*GRID_WIDTH*GRID_HEIGHT, 0.25*GRID_WIDTH*GRID_HEIGHT])
+
+    analysis.gen_boundary_vis()
 
 
 if __name__ == "__main__":
